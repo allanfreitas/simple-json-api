@@ -15,6 +15,6 @@ func handleIndex() http.HandlerFunc {
 func main() {
 
 	http.HandleFunc("/", handleIndex())
-	http.ListenAndServe("", nil)
+	http.ListenAndServe(":8080", nil)
 
 }

@@ -20,7 +20,7 @@ func TestIndex(t *testing.T) {
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
-	assert.Equal(t, string(body), "Home path")
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, "Home path", string(body))
 
 }
