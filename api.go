@@ -12,9 +12,16 @@ func handleIndex() http.HandlerFunc {
 
 }
 
+func handleStocks() http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "none")
+	})
+}
+
 func main() {
 
 	http.HandleFunc("/", handleIndex())
+	http.HandleFunc("/stocks", handleStocks())
 	http.ListenAndServe(":8080", nil)
 
 }

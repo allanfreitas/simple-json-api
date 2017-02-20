@@ -24,3 +24,18 @@ func TestIndex(t *testing.T) {
 	assert.Equal(t, "Home path", string(body))
 
 }
+
+func TestStocks(t *testing.T) {
+
+	handleStocks := handleStocks()
+
+	req, _ := http.NewRequest("GET", "/stocks", nil)
+	w := httptest.NewRecorder()
+
+	handleStocks.ServeHTTP(w, req)
+
+	resp := w.Result()
+
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+}
