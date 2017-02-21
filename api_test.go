@@ -27,15 +27,17 @@ func TestIndex(t *testing.T) {
 
 func TestStocks(t *testing.T) {
 
-	handleStocks := handleStocks()
+	handler := callStocks()
 
 	req, _ := http.NewRequest("GET", "/stocks", nil)
 	w := httptest.NewRecorder()
 
-	handleStocks.ServeHTTP(w, req)
+	handler.ServeHTTP(w, req)
 
 	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
 
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	assert.Equal(t, "[{\"ticker\":\"PETR4\",\"name\":\"Petróleo Brasileiro\"},{\"ticker\":\"ELPL3\",\"name\":\"Eletropaulo\"}]", string(body))
 }
