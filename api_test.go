@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/julienschmidt/httprouter"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -10,12 +11,14 @@ import (
 
 func TestIndex(t *testing.T) {
 
-	handleIndex := handleIndex()
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		handleIndex(w, r, nil)
+	}
 
 	req, _ := http.NewRequest("GET", "", nil)
 	w := httptest.NewRecorder()
 
-	handleIndex.ServeHTTP(w, req)
+	handler(w, req)
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -26,13 +29,14 @@ func TestIndex(t *testing.T) {
 }
 
 func TestStocks(t *testing.T) {
-
-	handler := callStocks()
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		handleStocks(w, r, nil)
+	}
 
 	req, _ := http.NewRequest("GET", "/stocks", nil)
 	w := httptest.NewRecorder()
 
-	handler.ServeHTTP(w, req)
+	handler(w, req)
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -44,19 +48,21 @@ func TestStocks(t *testing.T) {
 
 //TODO: This test is dummy
 func TestStocksData(t *testing.T) {
+	handler := func(w http.ResponseWriter, r *http.Request, param string) {
+		p := httprouter.Param{"ticker", param}
+		handleStocksData(w, r, p)
+	}
 
-	handler := callStockData()
-
-	req, _ := http.NewRequest("GET", "/stocks/PETR4", nil)
+	req, _ := http.NewRequest("GET", "/stocks/", nil)
 	w := httptest.NewRecorder()
 
-	handler.ServeHTTP(w, req)
+	handler(w, req, "PETR4")
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	assert.Equal(t, http.StatusOk, resp.StatusCode)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
-	assert.Equal(t, "[{\"01/01/2017\":\"39.40}, {\"02/01/2017\": \"39.00\"}]")
+	assert.Equal(t, "[{\"01/01/2017\":\"39.40}, {\"02/01/2017\": \"39.00\"}]", string(body))
 
 }
