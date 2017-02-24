@@ -64,6 +64,6 @@ func TestStocksData(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
-	assert.Equal(t, "[{\"01/01/2017\":\"39.40}, {\"02/01/2017\": \"39.00\"}]", string(body))
+	assert.Equal(t, "{\"01/01/2017\":\"39.40\",\"02/01/2017\":\"39.00\"}", string(body))
 
 }
