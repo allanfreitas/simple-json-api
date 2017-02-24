@@ -46,14 +46,15 @@ func TestStocks(t *testing.T) {
 	assert.Equal(t, "[{\"ticker\":\"PETR4\",\"name\":\"Petróleo Brasileiro\"},{\"ticker\":\"ELPL3\",\"name\":\"Eletropaulo\"}]", string(body))
 }
 
-//TODO: This test is dummy
 func TestStocksData(t *testing.T) {
 	handler := func(w http.ResponseWriter, r *http.Request, param string) {
-		p := httprouter.Param{"ticker", param}
-		handleStocksData(w, r, p)
+		p := httprouter.Params{
+			httprouter.Param{"ticker", param},
+		}
+		handleStockData(w, r, p)
 	}
 
-	req, _ := http.NewRequest("GET", "/stocks/", nil)
+	req, _ := http.NewRequest("GET", "/stocks/PETR4", nil)
 	w := httptest.NewRecorder()
 
 	handler(w, req, "PETR4")
