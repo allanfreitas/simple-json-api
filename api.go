@@ -12,7 +12,14 @@ type Stock struct {
 	Name   string `json:"name"`
 }
 
+type Data struct {
+	Date  string `json:"data"`
+	Value string `json:"value"`
+}
+
 type Stocks []Stock
+
+type StockData []Data
 
 func handleIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprintf(w, "Home path")
@@ -30,12 +37,24 @@ func handleStocks(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
+func handleStockData(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	stockData := StockData{
+		Data{"01/01/2017", "39.40"},
+		Data{"02/01/2017", "39.00"},
+	}
+	js, _ := json.Marshal(stockData)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+
+}
+
 func main() {
 
 	router := httprouter.New()
 
 	router.GET("/", handleIndex)
 	router.GET("/stocks", handleStocks)
+	router.GET("/stocks/:ticker", handleStockData)
 
 	http.ListenAndServe(":8080", nil)
 
