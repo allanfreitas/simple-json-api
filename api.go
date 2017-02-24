@@ -42,7 +42,11 @@ func handleStockData(w http.ResponseWriter, r *http.Request, _ httprouter.Params
 		Data{"01/01/2017", "39.40"},
 		Data{"02/01/2017", "39.00"},
 	}
-	js, _ := json.Marshal(stockData)
+	tempMap := make(map[string]string)
+	for _, stock := range stockData {
+		tempMap[stock.Date] = stock.Value
+	}
+	js, _ := json.Marshal(tempMap)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
 
